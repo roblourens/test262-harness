@@ -82,6 +82,14 @@ if (argv.prelude) {
 let hostType;
 let hostPath;
 let features;
+let testSet;
+if (argv.testList) {
+  const testList = fs.readFileSync(argv.testList).toString().split('\n');
+  testSet = new Set();
+  testList.forEach(testName => {
+    testSet.add(testName.trim());
+  });
+}
 
 if (argv.hostType) {
   hostType = argv.hostType;
@@ -158,6 +166,7 @@ if (acceptVersion ? acceptVersion !== test262Version :
 
 const tests = testStream(test262Dir, includesDir, acceptVersion, argv._)
   .map(insertPrelude)
+  .filter(included)
   .filter(hasFeatures);
 const pairs = Rx.Observable.zip(pool, tests);
 const rawResults = pairs.flatMap(pool.runTest).tapOnCompleted(() => pool.destroy());
@@ -193,4 +202,13 @@ function hasFeatures(test) {
     return true;
   }
   return features.filter(feature => (test.attrs.features || []).includes(feature)).length > 0;
+}
+
+const nameSearch = 'built-ins/RegExp';
+function included(test) {
+  const nameIdx = test.file.indexOf(nameSearch);
+  const name = test.file.substr(nameIdx + nameSearch.length + 1);
+
+  const shouldRun = !testSet || testSet.has(name);
+  return shouldRun;
 }

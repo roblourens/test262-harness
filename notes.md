@@ -1,0 +1,9 @@
+- Cases that don't work in Node 8
+- Cases that should fail to parse, but don't fail in rg
+    - These do in pcre2
+        - x{1}{1}
+        - a**
+        - \cA (https://mathiasbynens.be/notes/javascript-escapes#control)
+    - null bytes
+- Other things to work out
+    - Adjust positions for matches in multiline text

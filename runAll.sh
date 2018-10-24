@@ -1,0 +1,2 @@
+./bin/run.js '../test262/test/built-ins/RegExp/**/*.js' --prelude prelude.js --transformer ../transform/transformer.js --testList ./testFiles.txt
+# ./bin/run.js ../test262/test/built-ins/RegExp/S15.10.2.13_A1_T12.js --prelude prelude.js --transformer ../transform/transformer.js --testList ./testFiles.txt
